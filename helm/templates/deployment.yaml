@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logi-termostat
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: logi-termostat
+  template:
+    metadata:
+      labels:
+        app: logi-termostat
+    spec:
+      containers:
+        - name: logi-termostat
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          {{- range $key, $val := .Values.config }}
+            - name: {{ $key }}
+              value: {{ $val | quote }}
+          {{- end }}

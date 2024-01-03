@@ -1,0 +1,30 @@
+replicaCount: 1
+
+image:
+  repository: "#{dockerhub-user}#/#{image_name}#"
+  pullPolicy: Always
+  tag: "latest"
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+
+config:
+  MIEJSCE: "#{Miejsce}#"
+  ES_USERNAME: "#{es-username}#"
+  ES_PASSWORD: "#{es-password}#"
+  TUYA_ACCESS_ID: "#{tuya-access-id}#"
+  TUYA_ACCESS_KEY: "#{tuya-access-key}#"
+  ES_INDEX: "#{es_index}#"
+  ES_HOST: "#{es_url}#"
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
