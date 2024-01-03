@@ -9,7 +9,7 @@ parameters:
 - name: helmOperation
   displayName: 'Helm Operation'
   type: string
-  default: 'install'
+  default: 'both'
   values:
     - install
     - uninstall

@@ -25,12 +25,16 @@ ACCESS_KEY = os.environ.get('TUYA_ACCESS_KEY')
 logging.info(f"Miejsce to:{miejsce}")
 
 # Utworzenie połączenia z Elasticsearch
-es = Elasticsearch(es_host+":"+es_port, basic_auth=(es_username, es_password))
+try:
+    es = Elasticsearch(es_host+":"+es_port, basic_auth=(es_username, es_password))
+except Exception as e:
+    logging.error(f"Błąd połączenia z Elasticsearch: {e}")
 
 # Ścieżka do zapisu danych, gdy nie ma połączenia
 offline_data_path = Path("offline_data_gniazdka.json")
 
 lista_id = ["bf289bf7a00c812ce8mnvi"]
+
 
 def save_offline_data(data):
     try:
@@ -46,6 +50,7 @@ def save_offline_data(data):
     except Exception as e:
         logging.info(f"Błąd podczas zapisywania danych offline: {e}")
 
+
 def send_data_to_es(doc):
     try:
         response = es.index(index=index_name, body=doc)
@@ -59,12 +64,24 @@ def send_data_to_es(doc):
         logging.info(f"Błąd podczas wysyłania danych do Elasticsearch: {e}")
         return False
 
+
 while True:
-    openapi = TuyaOpenAPI(ENDPOINT, ACCESS_ID, ACCESS_KEY)
-    openapi.connect()
+    try:
+        openapi = TuyaOpenAPI(ENDPOINT, ACCESS_ID, ACCESS_KEY)
+        openapi.connect()
+    except Exception as e:
+        logging.error(f"Błąd połączenia z Tuya API: {e}")
+        continue
     for ind, DEVICE_ID in enumerate(lista_id):
         current_time = datetime.datetime.now()
-        response = openapi.get(f'/v1.0/iot-03/devices/{DEVICE_ID}/status')
+        try:
+            response = openapi.get(f'/v1.0/iot-03/devices/{DEVICE_ID}/status')
+        except Exception as e:
+            logging.error(f"Błąd podczas pobierania danych z Tuya API: {e}")
+            continue
+        if response.get('result') is None:
+            logging.error("Odpowiedź z Tuya API jest niewłaściwa.")
+            continue
         temp_set = None
         upper_temp = None
 
