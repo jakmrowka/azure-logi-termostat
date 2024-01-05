@@ -86,9 +86,9 @@ while True:
         upper_temp = None
 
         for item in response['result']:
-            if item['code'] == 'temp_set':
+            if item['code'] == 'TempSet':
                 temp_set = item['value']
-            elif item['code'] == 'upper_temp':
+            elif item['code'] == 'TempCurrent':
                 upper_temp = item['value']
     # Tworzenie dokumentu do wysłania
         doc = {
