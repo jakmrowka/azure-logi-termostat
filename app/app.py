@@ -7,6 +7,7 @@ from pathlib import Path
 from elasticsearch import Elasticsearch
 import os
 import logging
+import yaml
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 ENDPOINT = "https://openapi.tuyaeu.com"
@@ -21,6 +22,7 @@ es_username = os.environ.get('ES_USERNAME')
 es_password = os.environ.get('ES_PASSWORD')
 ACCESS_ID = os.environ.get('TUYA_ACCESS_ID')
 ACCESS_KEY = os.environ.get('TUYA_ACCESS_KEY')
+DEVICE_TYPE = os.environ.get('DEVICE_TYPE')
 
 logging.info(f"Miejsce to:{miejsce}")
 
@@ -33,7 +35,11 @@ except Exception as e:
 # Ścieżka do zapisu danych, gdy nie ma połączenia
 offline_data_path = Path("offline_data_gniazdka.json")
 
-lista_id = ["bf289bf7a00c812ce8mnvi"]
+file_path = 'list_device'
+with open(file_path, 'r') as file:
+    text_data = yaml.safe_load(file)
+data = yaml.safe_load(text_data)
+lista_id = data.get(DEVICE_TYPE)
 
 
 def save_offline_data(data):

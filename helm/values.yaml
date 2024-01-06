@@ -20,11 +20,4 @@ config:
   TUYA_ACCESS_KEY: "#{tuya-access-key}#"
   ES_INDEX: "#{es_index}#"
   ES_HOST: "#{es_url}#"
-
-resources: {}
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
+  DEVICE_TYPE: "#{device_type}#"

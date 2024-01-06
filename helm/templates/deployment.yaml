@@ -16,8 +16,16 @@ spec:
         - name: logi-termostat
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/list_device
+              subPath: list_device
           env:
           {{- range $key, $val := .Values.config }}
             - name: {{ $key }}
               value: {{ $val | quote }}
           {{- end }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: list-device-termostat

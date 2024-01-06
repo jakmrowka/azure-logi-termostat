@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: list-device-termostat
+data:
+  list_device: |
+    {{ .Files.Get "files/list_device.yaml" | quote }}
