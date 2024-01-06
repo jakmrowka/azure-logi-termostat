@@ -8,6 +8,7 @@ from elasticsearch import Elasticsearch
 import os
 import logging
 import yaml
+import programDecode
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 ENDPOINT = "https://openapi.tuyaeu.com"
@@ -88,20 +89,36 @@ while True:
         if response.get('result') is None:
             logging.error("Odpowiedź z Tuya API jest niewłaściwa.")
             continue
-        temp_set = None
+        temp_set_man = None
         upper_temp = None
+        mode = None
 
         for item in response['result']:
             if item['code'] == 'TempSet':
-                temp_set = item['value']
+                temp_set_man = item['value'] * 0.5
             elif item['code'] == 'TempCurrent':
-                upper_temp = item['value']
+                upper_temp = item['value'] * 0.5
+            elif item['code'] == 'Mode':
+                mode = item['value']
+            elif item['code'] == 'program':
+                program = item['value']
+
+        temp_set_program = programDecode.set_temperature(current_time, program)
+
+        if mode == '1':
+            temp_set = temp_set_man
+        else:
+            temp_set = temp_set_program
+
     # Tworzenie dokumentu do wysłania
         doc = {
             'timestamp': current_time.strftime("%Y-%m-%dT%H:%M:%S"),
             'city': miejsce,
-            'ustawiona_temp': temp_set * 0.5,
-            'biezaca_temp': upper_temp * 0.5
+            'ustawiona_temp': temp_set,
+            'biezaca_temp': upper_temp,
+            'tryb': int(mode),
+            'programowa_temp': temp_set_program,
+            'manualna_temp': temp_set_man
         }
         # logging.info(f"doc to:{doc}")
     # Próba wysłania danych
