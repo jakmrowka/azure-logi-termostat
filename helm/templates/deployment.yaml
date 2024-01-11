@@ -25,6 +25,31 @@ spec:
             - name: {{ $key }}
               value: {{ $val | quote }}
           {{- end }}
+            - name: ES_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: termostat-logi-secrets
+                  key: ES_USERNAME
+            - name: ES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: termostat-logi-secrets
+                  key: ES_PASSWORD
+            - name: TUYA_ACCESS_ID
+              valueFrom:
+                secretKeyRef:
+                  name: termostat-logi-secrets
+                  key: TUYA_ACCESS_ID
+            - name: TUYA_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: termostat-logi-secrets
+                  key: TUYA_ACCESS_KEY
+            - name: ES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: termostat-logi-secrets
+                  key: ES_HOST
       volumes:
         - name: config-volume
           configMap:

@@ -5,7 +5,7 @@ parameters:
 - name: buildImage
   displayName: 'Build Docker Image'
   type: boolean
-  default: true
+  default: false
 - name: helmOperation
   displayName: 'Helm Operation'
   type: string
