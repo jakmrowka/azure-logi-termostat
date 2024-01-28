@@ -1,5 +1,7 @@
 trigger:
-- main
+  branches:
+    include:
+    - '*'
 
 parameters:
 - name: buildImage
@@ -138,7 +140,7 @@ stages:
       displayName: 'Helm Operations'
 
 - stage: GithubSync
-  condition: succeeded('microk8s')
+  condition: and(succeeded('microk8s'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
   pool:
     name: gads-agent-pool
   jobs:
